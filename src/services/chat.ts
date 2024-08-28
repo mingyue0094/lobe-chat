@@ -7,7 +7,12 @@ import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
+import {
+  AgentRuntime,
+  ChatCompletionErrorPayload,
+  GenerateFinger,
+  ModelProvider,
+} from '@/libs/agent-runtime';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -257,9 +262,11 @@ class ChatService {
       if (deploymentName) model = deploymentName;
     }
 
+    const finger = GenerateFinger();
     const payload = merge(
       { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
       { ...res, model },
+      { finger: finger },
     );
 
     /**
